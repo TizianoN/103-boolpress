@@ -15,6 +15,8 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
+    @yield('css')
+
     <!-- Usando Vite -->
     @vite(['resources/js/app.js'])
   </head>
@@ -23,10 +25,18 @@
     <div id="app">
       @include('partials._navbar')
 
-      <main class="">
-        @yield('content')
+      <main>
+        <header class="container py-3 border-bottom">
+          @yield('content-header')
+        </header>
+
+        <div class="container mt-3">
+          @yield('content')
+        </div>
       </main>
     </div>
+
+    @yield('modals')
   </body>
 
 </html>

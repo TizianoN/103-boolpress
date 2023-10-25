@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-sm navbar-light bg-light">
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
   <div class="container">
     <a class="navbar-brand" href="{{ route('guest.home') }}">Navbar</a>
     <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavId"
@@ -21,6 +21,10 @@
             </li>
           @endif
         @else
+          <li class="nav-item">
+            <a class="nav-link" href="{{ route('admin.posts.index') }}">Posts</a>
+          </li>
+
           <li class="nav-item dropdown">
             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
               data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -32,7 +36,7 @@
               <a class="dropdown-item" href="{{ route('profile.edit') }}">{{ __('Profile') }}</a>
               <a class="dropdown-item" href="{{ route('logout') }}"
                 onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                                                            document.getElementById('logout-form').submit();">
                 {{ __('Logout') }}
               </a>
 

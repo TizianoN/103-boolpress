@@ -17,15 +17,7 @@
       @endforelse
     </div>
 
-    <a href="{{ route('guest.posts.all') }}">Vedi tutti</a>
-
-    {{-- {{ $posts->links('pagination::bootstrap-5') }} --}}
-
-  </section>
-  <section class="container mt-5">
-    <h1>Altra sezione...</h1>
-
-
+    {{ $posts->links('pagination::bootstrap-5') }}
 
   </section>
 @endsection
