@@ -4,10 +4,10 @@
   <section class="container mt-5">
     <h1>{{ $title }}</h1>
 
-    <div class="row g-3">
+    <div class="row rows-col-5 g-3">
 
       @forelse($posts as $post)
-        <div class="col-4">
+        <div class="col">
           @include('partials.post.card')
         </div>
       @empty

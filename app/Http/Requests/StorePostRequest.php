@@ -26,13 +26,11 @@ class StorePostRequest extends FormRequest
   {
     return [
 
-      'title' => [
-        'required',
-        'string',
-        Rule::unique('posts')
-      ],
+      'title' => ['required', 'string', Rule::unique('posts')],
+      'cover_image' => ['nullable', 'image', 'max:512'],
       'content' => ['required', 'string'],
-      'category_id' => ['nullable', 'exists:categories,id']
+      'category_id' => ['nullable', 'exists:categories,id'],
+      'tags' => ['nullable', 'exists:tags,id'],
     ];
   }
 
@@ -43,10 +41,15 @@ class StorePostRequest extends FormRequest
       'title.string' => 'Il titolo deve essere una stringa',
       'title.unique' => 'Esiste già un post con questo titolo',
 
+      'cover_image.image' => 'Il file caricato deve essere un\'immagine',
+      'cover_image.max' => 'Il file caricato deve avere una dimensione inferiore a 512KB',
+
       'content.required' => 'Il contenuto è obbligatorio',
       'content.string' => 'Il contenuto deve essere una stringa',
 
-      'category_id.exists' => 'La categoria inserita non è valida'
+      'category_id.exists' => 'La categoria inserita non è valida',
+
+      'tags.exists' => 'I tag inseriti non sono validi',
     ];
   }
 }

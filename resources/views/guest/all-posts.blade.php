@@ -1,6 +1,7 @@
 @extends('layouts.guest')
 
 @section('content')
+  @dump($posts)
   <section class="container mt-5">
     <h1>{{ $title }}</h1>
 

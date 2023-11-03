@@ -28,8 +28,13 @@ Route::middleware(['auth', 'verified'])
 
     Route::get('/', [AdminPageController::class, 'index'])->name('home');
 
+    // # ROTTE POST RESOURCE
+    Route::get('/posts/trash', [PostController::class, 'trash'])->name('posts.trash.index');
+    Route::patch('/posts/trash/{post}/restore', [PostController::class, 'restore'])->name('posts.trash.restore');
+    Route::delete('/posts/trash/{post}', [PostController::class, 'forceDestroy'])->name('posts.trash.force-destroy');
+    Route::delete('/posts/{post}/delete-image', [PostController::class, 'deleteImage'])->name('posts.delete-image');
+    Route::patch('/posts/{post}/publish', [PostController::class, 'publish'])->name('posts.publish');
     Route::resource('posts', PostController::class);
-
   });
 
 require __DIR__ . '/auth.php';

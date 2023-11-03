@@ -7,9 +7,18 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
 use App\Models\Category;
+use App\Models\Tag;
+use App\Mail\PostPublished;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
+
+
+
 
 
 class PostController extends Controller
@@ -33,7 +42,8 @@ class PostController extends Controller
   public function create()
   {
     $categories = Category::all();
-    return view('admin.posts.create', compact('categories'));
+    $tags = Tag::all();
+    return view('admin.posts.create', compact('categories', 'tags'));
   }
 
   /**
@@ -47,17 +57,22 @@ class PostController extends Controller
     $data = $request->validated();
 
     $post = new Post();
-
-    // $post->title = $data['title'];
-    // $post->content = $data['content'];
-
     $post->fill($data);
-
     $post->slug = Str::slug($post->title);
+
+    if ($request->hasFile('cover_image')) {
+      $cover_image_path = Storage::put('uploads/posts/cover_image', $data['cover_image']);
+      $post->cover_image = $cover_image_path;
+    }
+
     $post->save();
 
-    return redirect()->route('admin.posts.show', $post);
 
+    if (Arr::exists($data, 'tags')) {
+      $post->tags()->attach($data["tags"]);
+    }
+
+    return redirect()->route('admin.posts.show', $post);
   }
 
   /**
@@ -80,7 +95,10 @@ class PostController extends Controller
   public function edit(Post $post)
   {
     $categories = Category::all();
-    return view('admin.posts.edit', compact('post', 'categories'));
+    $tags = Tag::all();
+    $tag_ids = $post->tags->pluck('id')->toArray();
+
+    return view('admin.posts.edit', compact('post', 'categories', 'tags', 'tag_ids'));
   }
 
   /**
@@ -96,13 +114,29 @@ class PostController extends Controller
 
     $post->fill($data);
     $post->slug = Str::slug($post->title);
+
+    if ($request->hasFile('cover_image')) {
+      if ($post->cover_image) {
+        Storage::delete($post->cover_image);
+      }
+
+      $cover_image_path = Storage::put('uploads/posts/cover_image', $data['cover_image']);
+      $post->cover_image = $cover_image_path;
+    }
+
     $post->save();
+
+    if (Arr::exists($data, 'tags')) {
+      $post->tags()->sync($data["tags"]);
+    } else {
+      $post->tags()->detach();
+    }
 
     return redirect()->route('admin.posts.show', $post);
   }
 
   /**
-   * Remove the specified resource from storage.
+   * Soft deletes the specified resource from storage.
    *
    * @param  Post $post
    * * @return \Illuminate\Http\Response
@@ -111,5 +145,71 @@ class PostController extends Controller
   {
     $post->delete();
     return redirect()->route('admin.posts.index');
+  }
+
+  /**
+   * Display a listing of the deleted resource.
+   *
+   * * @return \Illuminate\Http\Response
+   */
+  public function trash()
+  {
+    $posts = Post::orderByDesc('id')->onlyTrashed()->paginate(12);
+    return view('admin.posts.trash.index', compact('posts'));
+  }
+
+  /**
+   * Remove the specified resource from storage.
+   *
+   * @param  Post $post
+   * * @return \Illuminate\Http\Response
+   */
+  public function forceDestroy(int $id)
+  {
+    $post = Post::onlyTrashed()->findOrFail($id);
+    $post->tags()->detach();
+
+    if ($post->cover_image) {
+      Storage::delete($post->cover_image);
+    }
+
+    $post->forceDelete();
+    return redirect()->route('admin.posts.trash.index');
+  }
+
+
+  /**
+   * Restore the specified resource from storage.
+   *
+   * @param  Post $post
+   * * @return \Illuminate\Http\Response
+   */
+  public function restore(int $id)
+  {
+    $post = Post::onlyTrashed()->findOrFail($id);
+    $post->restore();
+    return redirect()->route('admin.posts.trash.index');
+  }
+
+  public function deleteImage(Post $post)
+  {
+    Storage::delete($post->cover_image);
+    $post->cover_image = null;
+    $post->save();
+    return redirect()->back();
+  }
+
+  public function publish(Post $post, Request $request)
+  {
+    $data = $request->all();
+    $post->published = !Arr::exists($data, 'published') ? 1 : null;
+    $post->save();
+
+    // TODO: DA AGGIUNGERE INVIO EMAIL
+    $user = Auth::user();
+    $published_post_mailable = new PostPublished($post);
+    Mail::to($user->email)->send($published_post_mailable);
+
+    return redirect()->back();
   }
 }

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Post;
 use App\Models\Category;
+use App\Models\Tag;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -23,6 +24,8 @@ class PostSeeder extends Seeder
     $category_ids = Category::all()->pluck('id');
     $category_ids[] = null;
 
+    $tag_ids = Tag::all()->pluck('id');
+
     for ($i = 0; $i < 100; $i++) {
       $post = new Post();
       $post->category_id = $faker->randomElement($category_ids);
@@ -30,6 +33,8 @@ class PostSeeder extends Seeder
       $post->content = $faker->paragraphs(3, true);
       $post->slug = Str::slug($post->title);
       $post->save();
+
+      $post->tags()->attach($faker->randomElements($tag_ids, rand(0, 3)));
     }
   }
 }
