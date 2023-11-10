@@ -11,9 +11,10 @@ class PageController extends Controller
 {
   public function index()
   {
-    $title = "Featured posts";
-    $posts = Post::orderByDesc('created_at')->where('featured', 1)->where('published', 1)->limit(5)->get();
-    return view('guest.home', compact('title', 'posts'));
+    return redirect()->route("login");
+    // $title = "Featured posts";
+    // $posts = Post::orderByDesc('created_at')->where('featured', 1)->where('published', 1)->limit(5)->get();
+    // return view('guest.home', compact('title', 'posts'));
   }
 
   public function all_posts()

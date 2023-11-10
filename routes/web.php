@@ -18,8 +18,8 @@ use App\Http\Controllers\Guest\PageController as GuestPageController;
 */
 
 Route::get('/', [GuestPageController::class, 'index'])->name('guest.home');
-Route::get('/posts/all', [GuestPageController::class, 'all_posts'])->name('guest.posts.all');
-Route::get('/posts/{slug}', [GuestPageController::class, 'detail_post'])->name('guest.posts.detail');
+// Route::get('/posts/all', [GuestPageController::class, 'all_posts'])->name('guest.posts.all');
+// Route::get('/posts/{slug}', [GuestPageController::class, 'detail_post'])->name('guest.posts.detail');
 
 Route::middleware(['auth', 'verified'])
   ->prefix('admin')
