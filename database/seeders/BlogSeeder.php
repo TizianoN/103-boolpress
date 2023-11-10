@@ -25,26 +25,32 @@ class BlogSeeder extends Seeder
     $tags = Tag::factory()->count(10)->create();
 
     // # creo post "normali"
-    $posts = Post::factory()
-      ->useExistingCategory()
-      ->hasAttached($tags->random(3))
-      ->count(200)
-      ->create();
+    for ($i = 0; $i < 40; $i++) {
+      $posts = Post::factory()
+        ->useExistingCategory()
+        ->hasAttached($tags->random(3))
+        ->count(5)
+        ->create();
+    }
 
     // # creo post in evidenza
-    $featured_posts = Post::factory()
-      ->useExistingCategory()
-      ->hasAttached($tags->random(3))
-      ->featured()
-      ->count(5)
-      ->create();
+    for ($i = 0; $i < 5; $i++) {
+      $featured_posts = Post::factory()
+        ->useExistingCategory()
+        ->hasAttached($tags->random(3))
+        ->featured()
+        ->count(1)
+        ->create();
+    }
 
     // # creo post cestinati
-    $trashed_posts = Post::factory()
-      ->useExistingCategory()
-      ->hasAttached($tags->random(3))
-      ->trashed()
-      ->count(50)
-      ->create();
+    for ($i = 0; $i < 10; $i++) {
+      $trashed_posts = Post::factory()
+        ->useExistingCategory()
+        ->hasAttached($tags->random(3))
+        ->trashed()
+        ->count(5)
+        ->create();
+    }
   }
 }

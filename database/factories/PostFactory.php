@@ -27,6 +27,7 @@ class PostFactory extends Factory
       'title' => $title,
       'slug' => $slug,
       'content' => $content,
+      'published' => rand(0, 1),
     ];
   }
 

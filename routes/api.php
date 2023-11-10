@@ -3,6 +3,11 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\TagController;
+use App\Http\Controllers\Api\MessageFormController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,6 +19,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// # POST API
+Route::apiResource("posts", PostController::class)->only(["index", "show"]);
+Route::get('/posts-by-category/{category_id}', [PostController::class, 'postsByCategory']);
+Route::post('/get-posts-by-filters', [PostController::class, 'postsByFilters']);
+
+
+// # CATEGORY API
+Route::apiResource("categories", CategoryController::class)->only(["index", "show"]);
+
+
+// # TAGS API
+Route::apiResource("tags", TagController::class)->only(["index"]);
+
+
+// # MESSAGE FORM API
+Route::post("/message", [MessageFormController::class, 'store']);

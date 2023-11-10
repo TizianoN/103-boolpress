@@ -58,7 +58,7 @@ class PostController extends Controller
 
     $post = new Post();
     $post->fill($data);
-    $post->slug = Str::slug($post->title);
+    $post->setUniqueSlug();
 
     if ($request->hasFile('cover_image')) {
       $cover_image_path = Storage::put('uploads/posts/cover_image', $data['cover_image']);
@@ -113,7 +113,7 @@ class PostController extends Controller
     $data = $request->validated();
 
     $post->fill($data);
-    $post->slug = Str::slug($post->title);
+    $post->setUniqueSlug();
 
     if ($request->hasFile('cover_image')) {
       if ($post->cover_image) {
@@ -205,7 +205,7 @@ class PostController extends Controller
     $post->published = !Arr::exists($data, 'published') ? 1 : null;
     $post->save();
 
-    // TODO: DA AGGIUNGERE INVIO EMAIL
+    // INVIO EMAIL
     $user = Auth::user();
     $published_post_mailable = new PostPublished($post);
     Mail::to($user->email)->send($published_post_mailable);

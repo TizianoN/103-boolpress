@@ -31,7 +31,7 @@ class PostSeeder extends Seeder
       $post->category_id = $faker->randomElement($category_ids);
       $post->title = $faker->catchPhrase();
       $post->content = $faker->paragraphs(3, true);
-      $post->slug = Str::slug($post->title);
+      $post->setUniqueSlug();
       $post->save();
 
       $post->tags()->attach($faker->randomElements($tag_ids, rand(0, 3)));
