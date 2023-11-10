@@ -102,6 +102,14 @@ class PostController extends Controller
 
   public function postsFeatured()
   {
-    return Post::where('featured', 1)->limit(5);
+    $posts = Post::select("id", "category_id", "title", "slug", "content", "cover_image")
+      ->where('featured', 1)
+      ->where('published', 1)
+      ->with('tags:id,color,label', 'category:id,color,label')
+      ->limit(5)
+      ->get();
+
+
+    return response()->json($posts);
   }
 }
