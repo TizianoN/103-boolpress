@@ -23,6 +23,7 @@ use App\Http\Controllers\Api\MessageFormController;
 Route::apiResource("posts", PostController::class)->only(["index", "show"]);
 Route::get('/posts-by-category/{category_id}', [PostController::class, 'postsByCategory']);
 Route::post('/get-posts-by-filters', [PostController::class, 'postsByFilters']);
+Route::get('/posts-featured', [PostController::class, 'postsFeatured']);
 
 
 // # CATEGORY API
