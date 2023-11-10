@@ -99,4 +99,9 @@ class PostController extends Controller
 
     return response()->json($posts);
   }
+
+  public function postsFeatured()
+  {
+    return Post::where('featured', 1)->limit(5);
+  }
 }
