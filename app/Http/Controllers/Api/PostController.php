@@ -95,6 +95,14 @@ class PostController extends Controller
       }
     }
 
+    if (!empty($filters['activeAuthor'])) {
+      $posts_query->where('user_id', $filters['activeAuthor']);
+    }
+
+    if (!empty($filters['searchedTitle'])) {
+      $posts_query->where('title', "LIKE", "%".$filters['searchedTitle']."%");
+    }
+
     $posts = $posts_query->paginate(12);
 
     return response()->json($posts);

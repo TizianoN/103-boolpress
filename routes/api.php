@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\TagController;
 use App\Http\Controllers\Api\MessageFormController;
+use App\Http\Controllers\Api\AuthorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,8 @@ Route::get('/posts-by-category/{category_id}', [PostController::class, 'postsByC
 Route::post('/get-posts-by-filters', [PostController::class, 'postsByFilters']);
 Route::get('/posts-featured', [PostController::class, 'postsFeatured']);
 
+// # AUTHOR API
+Route::apiResource('authors', AuthorController::class)->only(['index']);
 
 // # CATEGORY API
 Route::apiResource("categories", CategoryController::class)->only(["index", "show"]);
