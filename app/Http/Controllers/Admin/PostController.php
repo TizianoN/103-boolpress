@@ -58,6 +58,7 @@ class PostController extends Controller
 
     $post = new Post();
     $post->fill($data);
+    $post->user_id = Auth::id();
     $post->setUniqueSlug();
 
     if ($request->hasFile('cover_image')) {
