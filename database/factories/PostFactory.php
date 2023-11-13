@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 use App\Models\Category;
+use App\Models\User;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Post>
@@ -57,6 +58,17 @@ class PostFactory extends Factory
 
       return [
         'category_id' => fake()->randomElement($categories),
+      ];
+    });
+  }
+
+  public function useExistingAuthor()
+  {
+    return $this->state(function (array $attributes) {
+      $users = User::all()->pluck('id');
+
+      return [
+        'user_id' => fake()->randomElement($users),
       ];
     });
   }
